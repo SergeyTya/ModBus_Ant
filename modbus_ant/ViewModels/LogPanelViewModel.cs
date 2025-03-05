@@ -6,6 +6,7 @@ using System.Linq;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using modbus_ant.utils;
 using Splat;
@@ -17,7 +18,7 @@ public partial class LogPanelViewModel: ObservableRecipient, IRecipient<Connecti
     private IDisposable? _subscription;
     
     [ObservableProperty]
-    private ObservableCollection<LogItem> _logs = [];
+    private string _textAll = "";
 
     public LogPanelViewModel()
     {
@@ -39,8 +40,8 @@ public partial class LogPanelViewModel: ObservableRecipient, IRecipient<Connecti
                         var tmp = new LogItem { Text = s, TextColor = new SolidColorBrush(Colors.Black) };
                         if (s.Contains("Error")) tmp.TextColor.Color = Colors.Red;
                         if (s.Contains("Warning")) tmp.TextColor.Color = Colors.Yellow;
-                       
-                        Logs.Insert(0,tmp);
+                        
+                        TextAll = $"{tmp.Text}{TextAll}";
                     });
                 });
         }
@@ -52,6 +53,12 @@ public partial class LogPanelViewModel: ObservableRecipient, IRecipient<Connecti
         string _text;
 
         [ObservableProperty]
-        public SolidColorBrush _textColor;
+        private SolidColorBrush _textColor;
+    }
+    
+    [RelayCommand]
+    public void Clear()
+    {
+        TextAll = "";
     }
 }

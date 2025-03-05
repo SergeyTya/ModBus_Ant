@@ -48,7 +48,7 @@ namespace modbus_ant.utils
             {
                 if (!TimerWdg.IsRunning) return;
                 if (TimerWdg.ElapsedMilliseconds <= 500) return;
-                this.Log().Fatal($"Serial timeout");
+                this.Log().Error($"Serial timeout");
                 TimerWdg.Reset();
                 _rxbuf.Clear();
                 ReceiveTimeout = true;
@@ -100,8 +100,18 @@ namespace modbus_ant.utils
                 var cacheTimeout = TimeSpan.FromMilliseconds(500);
                 var res = await RxSub.FirstAsync().ToTask().WaitAsync(cacheTimeout);
 
-                if (res == null) throw new ServerModbusTCPException("ExecCustomRequest: Null response");
-                if (res[0] != pld[0]) throw new ServerModbusTCPException("ExecCustomRequest: Not valid id");
+                // if (res == null) throw new ServerModbusTCPException("ExecCustomRequest: Null response");
+                // if (res[0] != pld[0]) throw new ServerModbusTCPException("ExecCustomRequest: Not valid id");
+
+                if (res == null )
+                {
+                    return [0];
+                }
+                
+                if (res[0] != pld[0])
+                {
+                    return [0];
+                }
 
                 if (res.Length > 3)
                 {
@@ -127,6 +137,9 @@ namespace modbus_ant.utils
                 }
                 return retval; 
                 
+            }catch(System.TimeoutException e)
+            {
+                return [0];
             }
             finally
             {
@@ -150,10 +163,18 @@ namespace modbus_ant.utils
                 this.Log().Error($"Skip write request. Port is on wait");
                 return;
             }
+           
             TimerWdg.Restart();
-            _port.ReadExisting();
-            _port.Write(req.ToArray(), 0, req.Count);
-            
+            if (!_port.IsOpen) return;
+            try
+            {
+                _port.ReadExisting();
+                _port.Write(req.ToArray(), 0, req.Count);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
 
         private void SerialReceive(object sender, SerialDataReceivedEventArgs e)
@@ -166,6 +187,7 @@ namespace modbus_ant.utils
             _port.Read(data, 0, size);
             _rxbuf.AddRange(data);
 
+            LogPld(_rxbuf.ToArray(), prefix: "<-");
             size = _rxbuf.Count;
             if(size > 2) {
                 crc = ChMbcrc16(_rxbuf.ToArray(), (ushort)(size - 2));
@@ -178,8 +200,13 @@ namespace modbus_ant.utils
 
             if (crc == frameCrc)
             {
-                LogPld(_rxbuf.ToArray(), prefix: "<-");
+                
                 TimerWdg.Stop();
+                if (_logging)
+                {
+                    this.Log().Info($"{TimerWdg.ElapsedMilliseconds} ms elapsed, CRC OK ");
+                }
+                
                 RxSub.OnNext(_rxbuf.ToArray());
                 _rxbuf.Clear();
             }

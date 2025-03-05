@@ -27,6 +27,7 @@
 				VerticalAlignment="Stretch" 
 				HorizontalAlignment="Stretch"
 				Text="{Binding InputText, Mode=Default}"
+				Foreground="{Binding TextColor}" 
 				KeyUp="TextBoxKeyUpEvent"
 				>
 				<TextBox.KeyBindings>

@@ -30,7 +30,7 @@ public partial class App : Application
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Observers(events => events.Do(evt =>{
                     Locator.Current.GetService<ILogProvider>()?.Post(
-                        $"   {evt.Timestamp.Hour}:{evt.Timestamp.Minute}:{evt.Timestamp.Second}.{evt.Timestamp.Millisecond} : [ {evt.Level} ]  {evt.MessageTemplate.Text} \n"
+                        $"   {evt.Timestamp.Hour:00}:{evt.Timestamp.Minute:00}:{evt.Timestamp.Second:00}: [ {evt.Level} ]  {evt.MessageTemplate.Text} \n"
                     );
                 }).Subscribe())
                 .CreateLogger();

@@ -14,31 +14,22 @@
 	<Panel VerticalAlignment="Stretch" >
 		<Border BorderThickness="3" Background="Gray" Margin="2">
 			<ScrollViewer Name="ScrollLog" Margin="2">
-				<ScrollViewer.ContextMenu>
-					<ContextMenu>
-						<MenuItem Header="Clear"			/>
-						<MenuItem Header="Save to file"	    />
-						<MenuItem Header="Open logger path" />
-					</ContextMenu>
-				</ScrollViewer.ContextMenu>
-						
-				<ItemsControl 
-					ItemsSource="{Binding Logs}" 
-					Name="Log"
-					Margin=" 2"
-					Background="DarkSlateGray">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<TextBlock 
-								Text="{Binding Text}" 
-								Foreground="{Binding TextColor}" 
-								Height="15"
-								FontWeight="Bold"
-								FontSize="12"
-							/>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl >
+				<SelectableTextBlock Name="TextBlockLog"
+									 VerticalAlignment="Stretch"
+									 Text="{Binding TextAll}"
+									 Foreground="DarkGray"
+									 Background="DarkSlateGray"
+									 FontWeight="Normal"
+									 FontSize="14"
+									 FontFamily="Nunito"
+								>
+					<SelectableTextBlock.ContextMenu>
+						<ContextMenu>
+							<MenuItem Header="Clear"	Command="{Binding ClearCommand}"		/>
+							<MenuItem Header="Copy"	    Click="MenuItem_OnClick"		/>
+						</ContextMenu>
+					</SelectableTextBlock.ContextMenu>
+				</SelectableTextBlock>
 			</ScrollViewer>
 		</Border>
 	</Panel>

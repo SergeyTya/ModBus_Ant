@@ -51,7 +51,7 @@ public partial class ControlPanelViewModel: ObservableRecipient, IEnableLogger
     void RelayCommand_ConnectButtonClick()
     {
         
-       IModbusTransport.CloseInstance();
+        IModbusTransport.CloseInstance();
 
        if (IsConnectRequested)
        {

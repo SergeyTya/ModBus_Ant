@@ -1,5 +1,8 @@
+using System;
+using System.IO.Ports;
 using Avalonia;
 using Avalonia.Controls;
+using modbus_ant.ViewModels;
 
 
 namespace modbus_ant.Views
@@ -9,6 +12,11 @@ namespace modbus_ant.Views
         public ControlPanelView()
         {
             InitializeComponent();
+        }
+
+        private void DropOpenEvent(object? sender, EventArgs e)
+        {
+            ((ControlPanelViewModel) this.DataContext).RTUOptions = SerialPort.GetPortNames();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Reactive.Subjects;
+using CommunityToolkit.Mvvm.Input;
 
 namespace modbus_ant.utils
 {
@@ -14,5 +15,7 @@ namespace modbus_ant.utils
             if (message == null) return;
             _log.OnNext(message);
         }
+
+
     }
 }

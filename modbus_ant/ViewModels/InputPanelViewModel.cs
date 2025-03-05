@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using modbus_ant.utils;
@@ -18,11 +19,15 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
     private bool _isBusy = false;
     
     [ObservableProperty]
+    private SolidColorBrush _textColor = new (Colors.Chartreuse);
+    
+    [ObservableProperty]
     private bool _isAutoSendChecked = false;
     
     [RelayCommand]
     void  ButtonClick()
     {
+        Validate();
         if(!_isBusy) Task.Run(PerformRequest);
     }
     
@@ -55,8 +60,6 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
             
             if (transport.IsOpen)
             {
-               
-            
                 Task.Run(async () =>
                 {
                     var dtr = await transport?.ExecCustomRequest(req.ToArray(), true)!;
@@ -81,7 +84,12 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
     {
         SubOption = SubOptions[value];
     }
-    
+
+    partial void OnInputTextChanged(string text)
+    {
+        TextColor= new SolidColorBrush(Colors.Red);
+    }
+
     [RelayCommand]
     private void Validate()
     {
@@ -97,11 +105,12 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
            if (res)
            {
                req.Add(result);
-               validRes += $"{result:X} ";
+               validRes += $"{result:X2} ";
            }
            
        }
        InputText = validRes;
+       TextColor= new (Colors.Chartreuse);
     }
 
     public InputPanelViewModel()

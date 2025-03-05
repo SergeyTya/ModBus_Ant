@@ -71,6 +71,8 @@
 						HorizontalAlignment="Stretch" 
 						ItemsSource="{Binding RTUOptions}"
 						SelectedIndex="{Binding RTUOptionSelected}"
+						DropDownOpened="DropOpenEvent"
+						
 						/>
 				</StackPanel>
 				<StackPanel VerticalAlignment="Stretch" Orientation="Vertical">
