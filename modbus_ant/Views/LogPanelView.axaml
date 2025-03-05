@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="clr-namespace:modbus_ant.ViewModels"
+             x:Class="modbus_ant.Views.LogPanelView"
+             x:DataType="vm:LogPanelViewModel">
+	
+	<UserControl.DataContext>
+		<vm:LogPanelViewModel />
+	</UserControl.DataContext>
+	
+	<Panel VerticalAlignment="Stretch" >
+		<Border BorderThickness="3" Background="Gray" Margin="2">
+			<ScrollViewer Name="ScrollLog" Margin="2">
+				<ScrollViewer.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Clear"			/>
+						<MenuItem Header="Save to file"	    />
+						<MenuItem Header="Open logger path" />
+					</ContextMenu>
+				</ScrollViewer.ContextMenu>
+						
+				<ItemsControl  ItemsSource="{Binding Logs}" Name="Log" Background="Black">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<TextBlock 
+								Text="{Binding Text}" 
+								Foreground="{Binding TextColor}" 
+								Height="15"
+								FontWeight="Light"
+								FontSize="12"
+							/>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl >
+			</ScrollViewer>
+		</Border>
+	</Panel>
+</UserControl> 
+	
