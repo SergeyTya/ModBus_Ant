@@ -48,6 +48,7 @@
 		</Panel>
 
 		<Button Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+		        Margin="1,0,1,0"
 		        Command="{Binding ButtonClickCommand}" >
 			<TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Send</TextBlock>
 		</Button>

@@ -22,14 +22,18 @@
 					</ContextMenu>
 				</ScrollViewer.ContextMenu>
 						
-				<ItemsControl  ItemsSource="{Binding Logs}" Name="Log" Background="Black">
+				<ItemsControl 
+					ItemsSource="{Binding Logs}" 
+					Name="Log"
+					Margin=" 2"
+					Background="DarkSlateGray">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<TextBlock 
 								Text="{Binding Text}" 
 								Foreground="{Binding TextColor}" 
 								Height="15"
-								FontWeight="Light"
+								FontWeight="Bold"
 								FontSize="12"
 							/>
 						</DataTemplate>

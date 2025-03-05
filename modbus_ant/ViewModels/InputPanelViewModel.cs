@@ -51,7 +51,6 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
         while (true)
         {
             var transport = IModbusTransport.GetInstance();
-            
             if (transport is null) break;
             
             if (transport.IsOpen)
@@ -69,6 +68,7 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
                 await Task.Delay(300).ConfigureAwait(false);
             }else{
                 this.Log().Error("Port is not open ");
+                break;
             }
 
             if (!IsAutoSendChecked) break;

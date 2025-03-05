@@ -12,7 +12,11 @@
 	</UserControl.DataContext>
 	
 	<Panel VerticalAlignment="Stretch" >
-		<TextBlock Text="{Binding Text}">
+		<TextBlock Text="{Binding Text}"
+		           Margin="5"
+		           VerticalAlignment="Center"
+		           Foreground="Gray"
+		           >
 		</TextBlock>
 	</Panel>
 	

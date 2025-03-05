@@ -18,23 +18,10 @@
 	<UserControl.DataContext>
 		<vm:ControlPanelViewModel />
 	</UserControl.DataContext>
+	
+	<Grid ShowGridLines="False" ColumnDefinitions="200,280,0,30,30" Margin="2">
 
-	<Panel Margin="1" >
-		<StackPanel Spacing="2" Orientation="Horizontal" VerticalAlignment="Stretch">
-			<Button ToolTip.Tip="Connection settings"  VerticalAlignment="Stretch">
-				<Panel>
-					<PathIcon  Data="{StaticResource SettingsRegular}"/>
-				</Panel>
-			</Button>
-			
-	<Grid ShowGridLines="False">
-		<Grid.ColumnDefinitions>
-		<ColumnDefinition Width="*"/>
-		<ColumnDefinition Width="*"/>
-		<ColumnDefinition Width="30"/>
-		</Grid.ColumnDefinitions>
-		
-	<Panel Margin="1" Height="40" Grid.Column="0">
+		<Panel Margin="1" Height="40" Grid.Column="0">
 		<StackPanel Spacing="2" Orientation="Horizontal" VerticalAlignment="Stretch">
 			<StackPanel VerticalAlignment="Stretch" Orientation="Vertical">
 				<TextBlock 
@@ -102,23 +89,28 @@
 			</StackPanel>
 		</Panel>
 		
-		<ToggleButton Grid.Column="2" 
+		<Button 
+			ToolTip.Tip="Connection settings"  
+			VerticalAlignment="Stretch"
+			Grid.Column="3"
+			>
+			<Panel>
+				<PathIcon  Data="{StaticResource SettingsRegular}"/>
+			</Panel>
+		</Button>
+			
+		<ToggleButton Grid.Column="4" 
 		              Name="ButtonConnect" 
 		              ToolTip.Tip="Disconnect" 
 		              VerticalAlignment="Stretch"
 		              Command="{Binding RelayCommand_ConnectButtonClickCommand}"
 		              IsChecked="{Binding IsConnectRequested}"
-		              >
+		>
 			<Panel>
 				<PathIcon  Data="{StaticResource PlugDisconnectedRegular}"/>
 			</Panel>
 		</ToggleButton>
-	
-		
+
 	</Grid>
-			
-			
-		</StackPanel>
-	</Panel>
 	
 </UserControl>
