@@ -11,7 +11,9 @@ namespace modbus_ant.utils
         public ICAN.TransportInitStruct InitStructure { get; }
         
         public Task<byte[]> ExecCustomRequest(byte[] pld, bool logEnabled);
-        
+
+        public bool SlaveMode { get; set; }
+
         /// <summary>
         ///     Close hardware transport and dispose all objects
         /// </summary>

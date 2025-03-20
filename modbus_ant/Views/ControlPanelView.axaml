@@ -19,7 +19,7 @@
 		<vm:ControlPanelViewModel />
 	</UserControl.DataContext>
 	
-	<Grid ShowGridLines="False" ColumnDefinitions="200,280,0,30,30" Margin="2">
+	<Grid ShowGridLines="False" ColumnDefinitions="170,260,35,35,35" Margin="2">
 
 		<Panel Margin="1" Height="40" Grid.Column="0">
 		<StackPanel Spacing="2" Orientation="Horizontal" VerticalAlignment="Stretch">
@@ -92,7 +92,16 @@
 		</Panel>
 		
 		<Button 
-			ToolTip.Tip="Connection settings"  
+			ToolTip.Tip="Slave mode"  
+			VerticalAlignment="Stretch"
+			Grid.Column="2"
+			Command="{Binding RelayCommand_SlButtonClickCommand}"
+		>
+			<TextBlock VerticalAlignment="Center">SL</TextBlock>
+		</Button>
+		
+		<Button 
+			ToolTip.Tip="Settings"  
 			VerticalAlignment="Stretch"
 			Grid.Column="3"
 			>

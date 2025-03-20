@@ -46,7 +46,16 @@ public partial class ControlPanelViewModel: ObservableRecipient, IEnableLogger
             ? new ConnectionState(ConnectionState.State.Connected)
             : new ConnectionState(ConnectionState.State.Disconnected));
     }
-    
+
+    [RelayCommand]
+    void RelayCommand_SlButtonClick()
+    {
+        var inst = IModbusTransport.GetInstance();
+        if (inst is null) return;
+        inst.SlaveMode = !inst.SlaveMode;
+        this.Log().Info($"Slave mode state {inst.SlaveMode}");
+    }
+
     [RelayCommand]
     void RelayCommand_ConnectButtonClick()
     {

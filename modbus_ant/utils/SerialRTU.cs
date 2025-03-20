@@ -28,6 +28,8 @@ namespace modbus_ant.utils
         private static readonly Subject<byte[]?> RxSub = new Subject<byte[]?>();
         private readonly bool _isOpen;
         private bool _connected;
+        private bool _slaveMode;
+        
 
         private uint _regCount;
         //bool _init_done = false; 
@@ -146,7 +148,13 @@ namespace modbus_ant.utils
                 SemaphoreSlim.Release();
             }
         }
-        
+
+        public bool SlaveMode
+        {
+            get => _slaveMode;
+            set => _slaveMode = value;
+        }
+
         public bool IsOpen =>  _port.IsOpen;
 
         private void SerialWrite(List<byte> req)
@@ -208,8 +216,60 @@ namespace modbus_ant.utils
                 }
                 
                 RxSub.OnNext(_rxbuf.ToArray());
+                
+
+                if (_slaveMode)
+                {
+                    SlaveProcess(_rxbuf.ToArray());
+                }
                 _rxbuf.Clear();
             }
+            else
+            {
+                if (TimerWdg.ElapsedMilliseconds > 100)
+                {
+                    this.Log().Warn($"{TimerWdg.ElapsedMilliseconds} ms elapsed, CRC FAILED ");
+                    RxSub.OnNext(_rxbuf.ToArray());
+                    _rxbuf.Clear();
+                }
+
+            }
+        }
+
+        private void SlaveProcess(byte[] rxData)
+        {
+            var rand = new Random();
+            
+            var adr = rxData[0];
+            var cmd = rxData[1];
+            
+            if (cmd == 0x03)
+            {
+                int regAdr = rxData[3] * 256 + rxData[2];
+                int regCnt = rxData[4] * 256 + rxData[5];
+
+                int resSize = regCnt * 2 + 3;
+                byte pldSize = (byte) (regCnt * 2);
+                
+                byte[] responce = new byte[resSize];
+
+                responce[0] = adr;
+                responce[1] = cmd;
+                responce[2] = pldSize;
+
+                for (int i = 0; i < pldSize; i++)
+                {
+                    if (i % 2 != 1)
+                    {
+                        responce[3+i] =(byte) rand.Next(255);
+                    }
+                }
+                
+               // Task.Delay(100).Wait();
+                SerialWrite(responce.ToList());
+                TimerWdg.Reset();
+            }
+
         }
 
         private static readonly byte[] AucCrcLo =

@@ -42,6 +42,8 @@ public partial class LogPanelViewModel: ObservableRecipient, IRecipient<Connecti
                         if (s.Contains("Warning")) tmp.TextColor.Color = Colors.Yellow;
                         
                         TextAll = $"{tmp.Text}{TextAll}";
+
+                        if (TextAll.Length > 3000) Clear();
                     });
                 });
         }
