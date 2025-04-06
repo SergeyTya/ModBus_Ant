@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
@@ -19,6 +21,12 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
     private bool _isBusy = false;
     
     [ObservableProperty]
+    private bool _isHistoryVisible = false;
+    
+    [ObservableProperty]
+    ObservableCollection<HistoryItem> _history = new ObservableCollection<HistoryItem>();
+    
+    [ObservableProperty]
     private SolidColorBrush _textColor = new (Colors.Chartreuse);
     
     [ObservableProperty]
@@ -28,6 +36,36 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
     void  ButtonClick()
     {
         Validate();
+        
+        if(InputText == "") return;
+        bool newLine = true;
+        foreach (var item in History)
+        {
+            if (item.Text == InputText)
+            {
+                newLine = false;
+                break;
+            }
+        }
+
+        if (newLine)
+        {
+            var tmp = new HistoryItem(InputText);
+            tmp.ActionSelect = () =>
+            {
+                InputText = tmp.Text;
+            };
+            tmp.ActionDelete = () =>
+            {
+                History.Remove(tmp);
+            };
+            tmp.ActionClear = () =>
+            {
+                History.Clear();
+            };
+            History.Add(tmp);
+        }
+        
         if(!_isBusy) Task.Run(PerformRequest);
     }
     
@@ -110,6 +148,7 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
            
        }
        InputText = validRes;
+      
        TextColor= new (Colors.Chartreuse);
     }
 
@@ -130,4 +169,36 @@ public partial class InputPanelViewModel:ObservableValidator, IEnableLogger
         InputText = "1 3 0 0 0 1";
         Validate();
     }
+    
+    public partial class HistoryItem(string text) : ObservableObject
+    {
+        [ObservableProperty]
+        string _text = text;
+        
+        
+        [RelayCommand]
+        void ItemSelected()
+        {
+            ActionSelect?.Invoke();
+        }
+        
+        [RelayCommand]
+        void ItemDelete()
+        {
+            ActionDelete?.Invoke();
+        }
+        
+        [RelayCommand]
+        void Clear()
+        {
+            ActionClear?.Invoke();
+        }
+
+
+        public Action? ActionSelect;
+        public Action? ActionDelete;
+        public Action? ActionClear;
+        
+    }
 }
+
